@@ -28,7 +28,9 @@ describe("rebalanceWeights", () => {
   });
 
   it("clamps out-of-range values", () => {
-    expect(rebalanceWeights({ a: 2500, b: 2500, c: 2500, d: 2500 }, keys, "a", 99999).a).toBe(10000);
+    expect(rebalanceWeights({ a: 2500, b: 2500, c: 2500, d: 2500 }, keys, "a", 99999).a).toBe(
+      10000,
+    );
     expect(rebalanceWeights({ a: 2500, b: 2500, c: 2500, d: 2500 }, keys, "a", -5).a).toBe(0);
   });
 

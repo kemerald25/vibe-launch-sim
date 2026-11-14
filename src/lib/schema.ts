@@ -19,7 +19,10 @@ function positiveDecimal(label: string) {
   return z
     .string()
     .refine(isDecimalString, `${label} must be a plain number, like 1 or 0.25.`)
-    .refine((s) => !isDecimalString(s) || parseUnits(s) > 0n, `${label} must be greater than zero.`);
+    .refine(
+      (s) => !isDecimalString(s) || parseUnits(s) > 0n,
+      `${label} must be greater than zero.`,
+    );
 }
 
 function optionalDecimal(label: string) {

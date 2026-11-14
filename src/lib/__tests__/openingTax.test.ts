@@ -31,8 +31,20 @@ describe("opening tax (linear model)", () => {
   });
 
   it("reports surcharge and what the buyer receives", () => {
-    expect(openingBuyOutcome(0, 200)).toMatchObject({ rateBps: 9900, surchargeBps: 9700, receivedBps: 100 });
-    expect(openingBuyOutcome(10_000, 200)).toMatchObject({ rateBps: 5050, surchargeBps: 4850, receivedBps: 4950 });
-    expect(openingBuyOutcome(20_000, 200)).toMatchObject({ rateBps: 200, surchargeBps: 0, receivedBps: 9800 });
+    expect(openingBuyOutcome(0, 200)).toMatchObject({
+      rateBps: 9900,
+      surchargeBps: 9700,
+      receivedBps: 100,
+    });
+    expect(openingBuyOutcome(10_000, 200)).toMatchObject({
+      rateBps: 5050,
+      surchargeBps: 4850,
+      receivedBps: 4950,
+    });
+    expect(openingBuyOutcome(20_000, 200)).toMatchObject({
+      rateBps: 200,
+      surchargeBps: 0,
+      receivedBps: 9800,
+    });
   });
 });

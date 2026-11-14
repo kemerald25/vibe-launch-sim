@@ -5,7 +5,13 @@ import { simulate } from "../simulate";
 import { buildSummary, displayName } from "../summary";
 
 describe("summary", () => {
-  const config = { ...defaultConfig(), name: "Moon Cat", ticker: "mcat", taxBps: 200, airdropBps: 300 };
+  const config = {
+    ...defaultConfig(),
+    name: "Moon Cat",
+    ticker: "mcat",
+    taxBps: 200,
+    airdropBps: 300,
+  };
   const text = buildSummary(simulate(config), "https://example.test/?v=1");
 
   it("carries the unofficial label and the link", () => {

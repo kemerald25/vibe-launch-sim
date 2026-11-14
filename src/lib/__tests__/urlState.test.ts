@@ -45,7 +45,9 @@ describe("URL state", () => {
   });
 
   it("falls back per field when a value is malformed", () => {
-    const config = decodeConfig(new URLSearchParams("v=1&tax=250&ob=abc&pp=-1&w=1-2&ty=nope&n=Kept"));
+    const config = decodeConfig(
+      new URLSearchParams("v=1&tax=250&ob=abc&pp=-1&w=1-2&ty=nope&n=Kept"),
+    );
     const defaults = defaultConfig();
     expect(config.taxBps).toBe(defaults.taxBps);
     expect(config.openingBuyBps).toBe(defaults.openingBuyBps);

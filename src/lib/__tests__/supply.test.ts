@@ -41,8 +41,12 @@ describe("supply plan", () => {
 describe("50% cap validation", () => {
   const base = defaultConfig();
   it("passes below and at the cap", () => {
-    expect(validateConfig({ ...base, openingBuyBps: 2000, airdropBps: 1000 }).allocation).toBeUndefined();
-    expect(validateConfig({ ...base, openingBuyBps: 2500, airdropBps: 2500 }).allocation).toBeUndefined();
+    expect(
+      validateConfig({ ...base, openingBuyBps: 2000, airdropBps: 1000 }).allocation,
+    ).toBeUndefined();
+    expect(
+      validateConfig({ ...base, openingBuyBps: 2500, airdropBps: 2500 }).allocation,
+    ).toBeUndefined();
   });
 
   it("fails above the cap with both numbers in the message", () => {
@@ -68,7 +72,11 @@ describe("splitAirdrop", () => {
 
   it("requires the audience split only when there is an airdrop", () => {
     const partial = { fomo: 5000, xCreators: 0, vibevibe: 0, spark: 0 };
-    expect(validateConfig({ ...defaultConfig(), airdropBps: 0, audience: partial }).audience).toBeUndefined();
-    expect(validateConfig({ ...defaultConfig(), airdropBps: 100, audience: partial }).audience).toContain("50%");
+    expect(
+      validateConfig({ ...defaultConfig(), airdropBps: 0, audience: partial }).audience,
+    ).toBeUndefined();
+    expect(
+      validateConfig({ ...defaultConfig(), airdropBps: 100, audience: partial }).audience,
+    ).toContain("50%");
   });
 });

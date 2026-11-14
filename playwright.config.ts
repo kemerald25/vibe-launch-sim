@@ -22,7 +22,7 @@ export default defineConfig({
   ],
   // Runs against the production build: run `pnpm build` first.
   webServer: {
-    command: `pnpm exec next start -p ${PORT}`,
+    command: `node node_modules/next/dist/bin/next start -p ${PORT}`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

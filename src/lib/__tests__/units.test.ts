@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { formatAmount, formatBps, formatMultiple, formatTokens, formatUnits, isDecimalString, ONE, parseUnits, tryParseUnits } from "../units";
+import {
+  formatAmount,
+  formatBps,
+  formatMultiple,
+  formatTokens,
+  formatUnits,
+  isDecimalString,
+  ONE,
+  parseUnits,
+  tryParseUnits,
+} from "../units";
 
 describe("units", () => {
   it("parses decimal strings exactly", () => {

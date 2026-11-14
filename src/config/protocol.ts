@@ -109,6 +109,8 @@ export const PROTOCOL = {
     /** The base tax splits into these shares. They divide the tax, not the trade. */
     projectShareBps: fact(8_000, "Tax"),
     protocolShareBps: fact(2_000, "Tax"),
+    /** Worked example given in the docs: a 2% tax on a $1,000 trade. */
+    workedExample: fact({ tradeUsd: 1_000, taxBps: 200 }, "Tax"),
     routes: fact(
       {
         treasury: { label: "Project treasury", short: "Treasury", paidIn: "pair" },

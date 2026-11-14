@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { constantProduct, curveParams, defaultVirtualTokensM, graduationTargetInPair, minVirtualTokensM } from "../curve";
+import {
+  constantProduct,
+  curveParams,
+  defaultVirtualTokensM,
+  graduationTargetInPair,
+  minVirtualTokensM,
+} from "../curve";
 import { ONE, parseUnits } from "../units";
 
 const params = curveParams(ONE, defaultVirtualTokensM());
@@ -32,7 +38,9 @@ describe("constant-product curve model (estimate)", () => {
 
   it("rejects impossible inputs", () => {
     expect(() => constantProduct.costToBuy(params.curveSupply + 1n, params)).toThrow(RangeError);
-    expect(() => constantProduct.costToBuy(1n, { ...params, virtualTokens: params.curveSupply })).toThrow(RangeError);
+    expect(() =>
+      constantProduct.costToBuy(1n, { ...params, virtualTokens: params.curveSupply }),
+    ).toThrow(RangeError);
   });
 
   it("derives the default virtual reserve from the supply split", () => {

@@ -38,3 +38,19 @@ export function siteUrl(): string {
   const host = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
   return host ? `https://${host}` : "http://localhost:3000";
 }
+
+/** Chart colours shared by the form, the tax bar, the PNG card and the OG image. */
+export const ROUTE_CSS_COLORS = {
+  treasury: "var(--c-treasury)",
+  rewardsPair: "var(--c-rewards-pair)",
+  rewardsToken: "var(--c-rewards-token)",
+  burn: "var(--c-burn)",
+} as const;
+
+export const CARD_ROUTE_COLORS = {
+  protocol: "#7b8376",
+  treasury: "#dff902",
+  rewardsPair: "#7fd1c0",
+  rewardsToken: "#c9a6ff",
+  burn: "#ff8f6b",
+} as const;

@@ -52,7 +52,10 @@ export function planSupply(openingBuyBps: number, airdropBps: number): SupplyPla
 }
 
 /** Splits the airdrop reserve across audiences. Dust goes to the largest share. */
-export function splitAirdrop(airdropTokens: bigint, split: AudienceSplit): Record<AudienceId, bigint> {
+export function splitAirdrop(
+  airdropTokens: bigint,
+  split: AudienceSplit,
+): Record<AudienceId, bigint> {
   if (!weightsAreComplete(split)) {
     throw new RangeError("Audience split must total 100%.");
   }

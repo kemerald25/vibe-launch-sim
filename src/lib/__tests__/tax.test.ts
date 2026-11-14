@@ -36,7 +36,12 @@ describe("calculateTax", () => {
   });
 
   it("splits the project share by route weights", () => {
-    const weights: RouteWeights = { treasury: 5000, rewardsPair: 2500, rewardsToken: 1500, burn: 1000 };
+    const weights: RouteWeights = {
+      treasury: 5000,
+      rewardsPair: 2500,
+      rewardsToken: 1500,
+      burn: 1000,
+    };
     const result = calculateTax(units("1000"), 200, weights);
     expect(result.routes.treasury).toBe(units("8"));
     expect(result.routes.rewardsPair).toBe(units("4"));
@@ -52,7 +57,12 @@ describe("calculateTax", () => {
   });
 
   it("never loses rounding dust: parts always sum to the whole", () => {
-    const weights: RouteWeights = { treasury: 3300, rewardsPair: 3300, rewardsToken: 3300, burn: 100 };
+    const weights: RouteWeights = {
+      treasury: 3300,
+      rewardsPair: 3300,
+      rewardsToken: 3300,
+      burn: 100,
+    };
     for (const amount of [1n, 7n, 999n, 123456789n, units("0.333333333333333333")]) {
       const r = calculateTax(amount, 300, weights);
       const routed = ROUTE_IDS.reduce((sum, id) => sum + r.routes[id], 0n);

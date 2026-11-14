@@ -12,7 +12,9 @@ describe("notice rules", () => {
   });
 
   it("always show the standing facts", () => {
-    expect(ids(base)).toEqual(expect.arrayContaining(["no-refund", "liquidity-locked", "testnet-no-value"]));
+    expect(ids(base)).toEqual(
+      expect.arrayContaining(["no-refund", "liquidity-locked", "testnet-no-value"]),
+    );
   });
 
   it("flags tax only at the 3% maximum", () => {
@@ -28,11 +30,16 @@ describe("notice rules", () => {
 
   it("flags a fully used allocation limit", () => {
     expect(ids({ ...base, openingBuyBps: 3000, airdropBps: 2000 })).toContain("allocation-at-cap");
-    expect(ids({ ...base, openingBuyBps: 3000, airdropBps: 1999 })).not.toContain("allocation-at-cap");
+    expect(ids({ ...base, openingBuyBps: 3000, airdropBps: 1999 })).not.toContain(
+      "allocation-at-cap",
+    );
   });
 
   it("flags 100% of the project share going to one route and names it", () => {
-    const config = { ...base, weights: { treasury: 0, rewardsPair: 0, rewardsToken: 0, burn: 10000 } };
+    const config = {
+      ...base,
+      weights: { treasury: 0, rewardsPair: 0, rewardsToken: 0, burn: 10000 },
+    };
     const notice = evaluateNotices(config).find((n) => n.id === "single-route");
     expect(notice?.body).toContain("token burn");
     expect(ids(base)).not.toContain("single-route");
@@ -40,13 +47,19 @@ describe("notice rules", () => {
 
   it("explains token rewards only when they are used", () => {
     expect(ids(base)).toContain("token-rewards-after-graduation");
-    const none = { ...base, weights: { treasury: 10000, rewardsPair: 0, rewardsToken: 0, burn: 0 } };
+    const none = {
+      ...base,
+      weights: { treasury: 10000, rewardsPair: 0, rewardsToken: 0, burn: 0 },
+    };
     expect(ids(none)).not.toContain("token-rewards-after-graduation");
     expect(ids(none)).not.toContain("pair-rewards-pull-based");
   });
 
   it("flags a zero treasury weight", () => {
-    const config = { ...base, weights: { treasury: 0, rewardsPair: 5000, rewardsToken: 5000, burn: 0 } };
+    const config = {
+      ...base,
+      weights: { treasury: 0, rewardsPair: 5000, rewardsToken: 5000, burn: 0 },
+    };
     expect(ids(config)).toContain("no-treasury");
     expect(ids(base)).not.toContain("no-treasury");
   });
@@ -58,13 +71,19 @@ describe("notice rules", () => {
 
   it("flags stacked tax only for graduated-token pairs", () => {
     expect(ids(base)).not.toContain("paired-token-tax");
-    expect(ids({ ...base, pairKind: "graduated", pairSymbol: "ABC" })).toContain("paired-token-tax");
-    expect(ids({ ...base, pairKind: "stock", pairSymbol: "ABC" })).not.toContain("paired-token-tax");
+    expect(ids({ ...base, pairKind: "graduated", pairSymbol: "ABC" })).toContain(
+      "paired-token-tax",
+    );
+    expect(ids({ ...base, pairKind: "stock", pairSymbol: "ABC" })).not.toContain(
+      "paired-token-tax",
+    );
   });
 
   it("explains the fixed target for non-ETH pairs", () => {
     expect(ids(base)).not.toContain("target-fixed-in-pair-units");
-    expect(ids({ ...base, pairKind: "stock", pairSymbol: "ABC" })).toContain("target-fixed-in-pair-units");
+    expect(ids({ ...base, pairKind: "stock", pairSymbol: "ABC" })).toContain(
+      "target-fixed-in-pair-units",
+    );
   });
 
   it("never gives advice", () => {
@@ -76,7 +95,11 @@ describe("notice rules", () => {
       openingBuyBps: 3000,
       airdropBps: 2000,
     };
-    const text = evaluateNotices(everything).map((n) => `${n.title} ${n.body}`).join(" ");
-    expect(text).not.toMatch(/\b(should|recommend|safe|risky|profit|good|bad|best|worst|consider)\b/i);
+    const text = evaluateNotices(everything)
+      .map((n) => `${n.title} ${n.body}`)
+      .join(" ");
+    expect(text).not.toMatch(
+      /\b(should|recommend|safe|risky|profit|good|bad|best|worst|consider)\b/i,
+    );
   });
 });
