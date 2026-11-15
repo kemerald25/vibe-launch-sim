@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+/* Design tokens. Dark is the default theme; light applies when the system
+   prefers it or the user picks it with the toggle. */
+:root {
+  color-scheme: dark;
+  --bg: #0e1010;
+  --surface: #161917;
+  --panel: #191c1b;
+  --text: #f1f4eb;
+  --body: #ced3c8;
+  --muted: #a0a99b;
+  --line: #30352e;
+  --accent: #dff902;
+  --accent-ink: #0e1010;
+  --soft: #262e13;
+  --danger: #ff9d8a;
+  --c-protocol: #7b8376;
+  --c-treasury: #dff902;
+  --c-rewards-pair: #7fd1c0;
+  --c-rewards-token: #c9a6ff;
+  --c-burn: #ff8f6b;
+  --c-curve: #4b5347;
+  --c-liquidity: #7b8376;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #ffffff;
+    --surface: #f7f8f5;
+    --panel: #ffffff;
+    --text: #191c18;
+    --body: #42493f;
+    --muted: #636b60;
+    --line: #e1e5dc;
+    --accent: #426000;
+    --accent-ink: #ffffff;
+    --soft: #f0f7d8;
+    --danger: #b42318;
+    --c-protocol: #7d8579;
+    --c-treasury: #426000;
+    --c-rewards-pair: #0f766e;
+    --c-rewards-token: #6d28d9;
+    --c-burn: #c2410c;
+    --c-curve: #c9cfc3;
+    --c-liquidity: #8d9588;
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --surface: #f7f8f5;
+  --panel: #ffffff;
+  --text: #191c18;
+  --body: #42493f;
+  --muted: #636b60;
+  --line: #e1e5dc;
+  --accent: #426000;
+  --accent-ink: #ffffff;
+  --soft: #f0f7d8;
+  --danger: #b42318;
+  --c-protocol: #7d8579;
+  --c-treasury: #426000;
+  --c-rewards-pair: #0f766e;
+  --c-rewards-token: #6d28d9;
+  --c-burn: #c2410c;
+  --c-curve: #c9cfc3;
+  --c-liquidity: #8d9588;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-panel: var(--panel);
+  --color-text: var(--text);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-soft: var(--soft);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--body);
+    font-family: var(--font-sans);
+    line-height: 1.55;
+  }
+
+  h1,
+  h2,
+  h3,
+  legend {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  input[type="range"] {
+    accent-color: var(--accent);
+    width: 100%;
+    height: 28px;
+    cursor: pointer;
+  }
+
+  a {
+    text-underline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .prose-block p + p {
+    margin-top: 0.75rem;
+  }
+  .link {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 1px;
+  }
+  .link:hover {
+    color: var(--accent);
+  }
+}
