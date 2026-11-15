@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
-import { SiteFooter, SiteHeader, UnofficialBanner } from "@/components/SiteChrome";
+import { SiteFooter, SiteTopBar } from "@/components/SiteChrome";
 import { themeInitScript } from "@/components/ThemeToggle";
 import { SITE, siteUrl } from "@/config/site";
 import "./globals.css";
@@ -64,8 +64,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           Skip to content
         </a>
-        <UnofficialBanner />
-        <SiteHeader />
+        <SiteTopBar />
         <main id="main" className="mx-auto max-w-6xl px-4">
           {children}
         </main>

@@ -110,7 +110,6 @@ Other choices made while building:
 - Name, ticker, and symbol length limits are cosmetic form limits, not protocol rules.
 - The supply map uses two aligned bars (the fixed split, and your allocations) with the 50% limit drawn across both, so it does not imply which bucket an allocation comes from.
 - TypeScript is pinned to 6.x because `typescript-eslint` does not support TypeScript 7 yet.
-- The author's X link in `src/config/site.ts` is a placeholder.
 
 ## Deploying to Vercel
 

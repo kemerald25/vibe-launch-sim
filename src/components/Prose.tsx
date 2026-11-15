@@ -26,7 +26,7 @@ export function Article({
     <section
       id={id}
       aria-labelledby={`${id}-title`}
-      className="scroll-mt-16 border-t border-line py-7"
+      className="scroll-mt-28 border-t border-line py-7"
     >
       <h2 id={`${id}-title`} className="text-lg">
         {title}

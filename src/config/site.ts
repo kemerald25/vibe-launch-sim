@@ -9,11 +9,10 @@ export const SITE = {
     "See exactly what your vibe/vibe launch settings mean before you sign anything. Free, client-side, and never asks you to connect a wallet.",
   unofficialLabel: "Unofficial community tool. Not affiliated with or endorsed by vibe/vibe.",
   noWalletLabel: "Preflight never asks you to connect a wallet.",
-  author: "Unity Ekeoba",
-  // Placeholder links: replace with the real profiles.
+  author: "Dev Royale",
   githubUrl: "https://github.com/kemerald25/vibe-launch-sim",
   authorGithubUrl: "https://github.com/kemerald25",
-  authorXUrl: "https://x.com/your-handle",
+  authorXUrl: "https://x.com/iamdevroale",
 } as const;
 
 export const ISSUES_URL = `${SITE.githubUrl}/issues/new`;

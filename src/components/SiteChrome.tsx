@@ -4,13 +4,23 @@ import { SITE } from "@/config/site";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 
-/** Always-visible label. Sticks to the top of every page. */
+/** Unofficial label plus site header, pinned to the top of every page. */
+export function SiteTopBar() {
+  return (
+    <div className="sticky top-0 z-20 bg-bg">
+      <UnofficialBanner />
+      <SiteHeader />
+    </div>
+  );
+}
+
+/** Always-visible label. */
 export function UnofficialBanner() {
   return (
     <div
       role="note"
       data-testid="unofficial-label"
-      className="sticky top-0 z-20 border-b border-line bg-surface px-4 py-1.5 text-center font-mono text-[11px] leading-snug text-muted sm:text-xs"
+      className="border-b border-line bg-surface px-4 py-1.5 text-center font-mono text-[11px] leading-snug text-muted sm:text-xs"
     >
       {SITE.unofficialLabel}
     </div>

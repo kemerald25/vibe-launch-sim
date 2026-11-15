@@ -87,7 +87,7 @@ export function Simulator({
 
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:items-start">
-      <div className="lg:sticky lg:top-12 lg:max-h-[calc(100dvh-4rem)] lg:overflow-y-auto">
+      <div className="lg:sticky lg:top-[6.5rem] lg:max-h-[calc(100dvh-7.5rem)] lg:overflow-y-auto">
         <a
           href="#results"
           className="mb-3 inline-flex min-h-11 items-center font-mono text-[13px] text-muted underline decoration-line underline-offset-4 hover:text-text lg:hidden"
@@ -103,7 +103,7 @@ export function Simulator({
         />
       </div>
 
-      <div id="results" className="scroll-mt-14 space-y-5">
+      <div id="results" className="scroll-mt-32 space-y-5">
         <h2 className="sr-only">What these settings mean</h2>
         {valid ? null : <ErrorSummary errors={errors} />}
         {sim ? (
