@@ -144,7 +144,7 @@ export function defaultConfig(): SimConfig {
     pairPriceEth: "1",
     taxBps: PROTOCOL.tax.baseOptionsBps.value[0],
     weights: evenSplit(ROUTE_IDS),
-    openingBuyBps: 500,
+    openingBuyBps: 0,
     airdropBps: 0,
     audience: evenSplit(AUDIENCE_IDS),
     creationFeeEth: "",

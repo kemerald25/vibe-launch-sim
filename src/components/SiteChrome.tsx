@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { DOCS_URL, PROTOCOL, VERIFIED_ON } from "@/config/protocol";
-import { SITE } from "@/config/site";
+import { REPORT_WRONG_NUMBER_URL, SITE } from "@/config/site";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -80,9 +80,14 @@ export function SiteFooter() {
             Source on GitHub
           </a>{" "}
           ·{" "}
-          <Link className="link" href="/about">
+          <a
+            className="link"
+            href={REPORT_WRONG_NUMBER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Report a wrong number
-          </Link>
+          </a>
         </p>
       </div>
     </footer>

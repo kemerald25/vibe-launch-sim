@@ -89,55 +89,62 @@ export function ConfigForm({
         </button>
       </div>
 
-      <Group legend="Token">
-        <div className="grid grid-cols-[1fr_7.5rem] gap-3">
-          <Field id="name" label="Name" error={errors.name}>
-            <input
-              id="name"
-              type="text"
-              autoComplete="off"
-              maxLength={FORM_LIMITS.nameMaxLength + 8}
-              placeholder="Untitled token"
-              value={config.name}
-              aria-invalid={errors.name ? true : undefined}
-              aria-describedby={describedBy("name", false, errors.name)}
-              onChange={(e) => update("name", e.target.value)}
-              className={inputClass}
-            />
-          </Field>
-          <Field id="ticker" label="Ticker" error={errors.ticker}>
-            <input
-              id="ticker"
-              type="text"
-              autoComplete="off"
-              autoCapitalize="characters"
-              placeholder="TICK"
-              value={config.ticker}
-              aria-invalid={errors.ticker ? true : undefined}
-              aria-describedby={describedBy("ticker", false, errors.ticker)}
-              onChange={(e) => update("ticker", e.target.value.toUpperCase())}
-              className={inputClass}
-            />
-          </Field>
+      <Group legend="Tax">
+        <div>
+          <Segmented
+            name="taxBps"
+            legend="Base project tax, on buys and sells"
+            options={taxOptions}
+            value={config.taxBps}
+            onChange={(value) => update("taxBps", value)}
+          />
+          <FieldError id="taxBps-error" message={errors.taxBps} />
         </div>
-        <p className="-mt-2 text-[13px] text-muted">
-          Name and ticker are cosmetic here. They only label your summary.
-        </p>
-        <Field id="projectType" label="Project type (optional)">
-          <select
-            id="projectType"
-            value={config.projectType}
-            onChange={(e) => update("projectType", e.target.value as SimConfig["projectType"])}
-            className={inputClass}
-          >
-            <option value="none">Not set</option>
-            {PROJECT_TYPE_IDS.map((id) => (
-              <option key={id} value={id}>
-                {launch.projectTypes.value[id]}
-              </option>
-            ))}
-          </select>
-        </Field>
+        <WeightSliders
+          idPrefix="weights"
+          legend="Where the project share goes"
+          hint={`You route the project's ${formatBps(tax.projectShareBps.value)} of the tax. Sliders always total 100%.`}
+          keys={ROUTE_IDS}
+          labels={routeLabels}
+          colors={ROUTE_CSS_COLORS}
+          weights={config.weights}
+          onChange={(weights) => update("weights", weights)}
+          error={errors.weights}
+        />
+      </Group>
+
+      <Group legend="Supply">
+        <PercentField
+          id="openingBuy"
+          label="Opening buy"
+          valueBps={config.openingBuyBps}
+          maxBps={cap}
+          invalid={Boolean(errors.allocation || errors.openingBuyBps)}
+          onChange={(bps) => update("openingBuyBps", bps)}
+          hint="Share of total supply the creator buys in the launch transaction."
+        />
+        <PercentField
+          id="airdrop"
+          label="Airdrop reserve"
+          valueBps={config.airdropBps}
+          maxBps={cap}
+          invalid={Boolean(errors.allocation || errors.airdropBps)}
+          onChange={(bps) => update("airdropBps", bps)}
+          hint="Share of total supply reserved for a graduation airdrop."
+        />
+        <FieldError id="allocation-error" message={errors.allocation} />
+        {config.airdropBps > 0 ? (
+          <WeightSliders
+            idPrefix="audience"
+            legend="Airdrop audiences"
+            hint="How the reserve is split across the four audiences."
+            keys={AUDIENCE_IDS}
+            labels={airdrop.audiences.value}
+            weights={config.audience}
+            onChange={(audience) => update("audience", audience)}
+            error={errors.audience}
+          />
+        ) : null}
       </Group>
 
       <Group legend="Pair asset">
@@ -198,64 +205,6 @@ export function ConfigForm({
             </p>
           </div>
         )}
-      </Group>
-
-      <Group legend="Tax">
-        <div>
-          <Segmented
-            name="taxBps"
-            legend="Base project tax, on buys and sells"
-            options={taxOptions}
-            value={config.taxBps}
-            onChange={(value) => update("taxBps", value)}
-          />
-          <FieldError id="taxBps-error" message={errors.taxBps} />
-        </div>
-        <WeightSliders
-          idPrefix="weights"
-          legend="Where the project share goes"
-          hint={`You route the project's ${formatBps(tax.projectShareBps.value)} of the tax. Sliders always total 100%.`}
-          keys={ROUTE_IDS}
-          labels={routeLabels}
-          colors={ROUTE_CSS_COLORS}
-          weights={config.weights}
-          onChange={(weights) => update("weights", weights)}
-          error={errors.weights}
-        />
-      </Group>
-
-      <Group legend="Supply">
-        <PercentField
-          id="openingBuy"
-          label="Opening buy"
-          valueBps={config.openingBuyBps}
-          maxBps={cap}
-          invalid={Boolean(errors.allocation || errors.openingBuyBps)}
-          onChange={(bps) => update("openingBuyBps", bps)}
-          hint="Share of total supply the creator buys in the launch transaction."
-        />
-        <PercentField
-          id="airdrop"
-          label="Airdrop reserve"
-          valueBps={config.airdropBps}
-          maxBps={cap}
-          invalid={Boolean(errors.allocation || errors.airdropBps)}
-          onChange={(bps) => update("airdropBps", bps)}
-          hint="Share of total supply reserved for a graduation airdrop."
-        />
-        <FieldError id="allocation-error" message={errors.allocation} />
-        {config.airdropBps > 0 ? (
-          <WeightSliders
-            idPrefix="audience"
-            legend="Airdrop audiences"
-            hint="How the reserve is split across the four audiences."
-            keys={AUDIENCE_IDS}
-            labels={airdrop.audiences.value}
-            weights={config.audience}
-            onChange={(audience) => update("audience", audience)}
-            error={errors.audience}
-          />
-        ) : null}
       </Group>
 
       <Group legend="Fees from the app (optional)">
@@ -345,6 +294,57 @@ export function ConfigForm({
           </Field>
         </div>
       </details>
+
+      <Group legend="Label your summary (optional)">
+        <div className="grid grid-cols-[1fr_7.5rem] gap-3">
+          <Field id="name" label="Name" error={errors.name}>
+            <input
+              id="name"
+              type="text"
+              autoComplete="off"
+              maxLength={FORM_LIMITS.nameMaxLength + 8}
+              placeholder="Untitled token"
+              value={config.name}
+              aria-invalid={errors.name ? true : undefined}
+              aria-describedby={describedBy("name", false, errors.name)}
+              onChange={(e) => update("name", e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+          <Field id="ticker" label="Ticker" error={errors.ticker}>
+            <input
+              id="ticker"
+              type="text"
+              autoComplete="off"
+              autoCapitalize="characters"
+              placeholder="TICK"
+              value={config.ticker}
+              aria-invalid={errors.ticker ? true : undefined}
+              aria-describedby={describedBy("ticker", false, errors.ticker)}
+              onChange={(e) => update("ticker", e.target.value.toUpperCase())}
+              className={inputClass}
+            />
+          </Field>
+        </div>
+        <p className="-mt-2 text-[13px] text-muted">
+          Name and ticker are cosmetic here. They only label your summary.
+        </p>
+        <Field id="projectType" label="Project type (optional)">
+          <select
+            id="projectType"
+            value={config.projectType}
+            onChange={(e) => update("projectType", e.target.value as SimConfig["projectType"])}
+            className={inputClass}
+          >
+            <option value="none">Not set</option>
+            {PROJECT_TYPE_IDS.map((id) => (
+              <option key={id} value={id}>
+                {launch.projectTypes.value[id]}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </Group>
     </form>
   );
 }

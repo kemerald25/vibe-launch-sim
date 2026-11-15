@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Article, PageIntro } from "@/components/Prose";
 import { DOCS_URL, FACT_SOURCES, VERIFIED_ON } from "@/config/protocol";
-import { ISSUES_URL, SITE } from "@/config/site";
+import { REPORT_WRONG_NUMBER_URL, SITE } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "About",
@@ -97,12 +97,18 @@ export default function AboutPage() {
 
       <Article id="report" title="Found a wrong number?">
         <p>
-          Testnet rules change. If something here no longer matches the official docs, please{" "}
-          <a className="link" href={ISSUES_URL} target="_blank" rel="noreferrer">
-            open a GitHub issue
-          </a>
-          . It helps to include the page of the docs that shows the correct value and the link to
-          your simulation.
+          Testnet rules change. If a figure here no longer matches the vibe/vibe app or the official
+          docs,{" "}
+          <a
+            className="link"
+            href={REPORT_WRONG_NUMBER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            report a wrong number
+          </a>{" "}
+          on GitHub. The form asks which figure is wrong, what {SITE.name} shows, what the app or
+          docs show, and for a link or screenshot.
         </p>
       </Article>
 
