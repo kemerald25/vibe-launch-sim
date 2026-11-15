@@ -13,6 +13,8 @@ export function displayName(config: SimConfig): string {
   return "Untitled token";
 }
 
+export const NO_OPENING_BUY = "No opening buy set";
+
 export function lockedSettingsLine(): string {
   return "pair asset, tax, routing weights, graduation target, holder books, airdrop campaign";
 }
@@ -23,6 +25,7 @@ export function buildSummary(sim: Simulation, url: string): string {
   const routes = PROTOCOL.tax.routes.value;
   const audiences = PROTOCOL.airdrop.audiences.value;
   const windowSeconds = PROTOCOL.tax.openingWindowSeconds.value;
+  const hasBuy = supply.openingBuyTokens > 0n;
 
   const routing = ROUTE_IDS.filter((id) => config.weights[id] > 0)
     .map((id) => `${routes[id].short} ${formatBps(config.weights[id])}`)
@@ -42,8 +45,10 @@ export function buildSummary(sim: Simulation, url: string): string {
     `- Protocol share (${formatBps(PROTOCOL.tax.protocolShareBps.value)} of tax): ${formatAmount(tax.protocolShare)} ${pairSymbol}`,
     `- Project share (${formatBps(PROTOCOL.tax.projectShareBps.value)} of tax): ${formatAmount(tax.projectShare)} ${pairSymbol}`,
     "",
-    "**Supply**",
-    `- Opening buy: ${formatBps(supply.openingBuyBps)} (${formatTokens(supply.openingBuyTokens)} tokens)`,
+    "**Your allocations, measured against total supply**",
+    hasBuy
+      ? `- Opening buy: ${formatBps(supply.openingBuyBps)} (${formatTokens(supply.openingBuyTokens)} tokens)`
+      : `- Opening buy: ${NO_OPENING_BUY.toLowerCase()}`,
     `- Airdrop reserve: ${formatBps(supply.airdropBps)} (${formatTokens(supply.airdropTokens)} tokens)`,
     `- Combined: ${formatBps(supply.combinedBps)} of the ${formatBps(supply.capBps)} limit`,
   ];
@@ -61,7 +66,9 @@ export function buildSummary(sim: Simulation, url: string): string {
     `- Curve buys pay an opening rate that falls from ${formatBps(PROTOCOL.tax.openingStartRateBps.value)} to ${formatBps(config.taxBps)}. Sells and the creator's opening buy are exempt from the surcharge.`,
     "",
     "**Estimates (model, not protocol data)**",
-    `- Opening buy cost: about ${formatAmount(curve.openingBuyCost)} ${pairSymbol} before tax`,
+    hasBuy
+      ? `- Opening buy cost: about ${formatAmount(curve.openingBuyCost)} ${pairSymbol} before tax`
+      : `- Opening buy cost: ${NO_OPENING_BUY.toLowerCase()}`,
     `- Graduation target: about ${formatAmount(curve.targetPair)} ${pairSymbol}`,
     "",
     `**Locked after launch:** ${lockedSettingsLine()}`,

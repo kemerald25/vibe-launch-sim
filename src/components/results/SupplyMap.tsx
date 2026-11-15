@@ -16,12 +16,82 @@ function Swatch({ color }: { color: string }) {
   );
 }
 
+const ALLOCATIONS_HEADING = "Your allocations, measured against total supply";
+const SHARES_NOTE = "These are shares of the total supply, not additional tokens.";
+
+interface Row {
+  label: string;
+  color: string;
+  bps: number;
+  tokens: bigint;
+}
+
+/** One group of the supply breakdown. The two groups are separate tables so their percentages are never read as one sum. */
+function SupplyTable({
+  caption,
+  rows,
+  total,
+}: {
+  caption: string;
+  rows: Row[];
+  total: { label: string; bps: string; tokens: string; danger?: boolean };
+}) {
+  return (
+    <table className="mt-4 w-full text-sm">
+      <caption className="pb-1 text-left font-mono text-[13px] font-medium text-text">
+        {caption}
+      </caption>
+      <thead>
+        <tr className="border-b border-line text-left font-mono text-[11px] uppercase tracking-wider text-muted">
+          <th scope="col" className="py-1.5 font-medium">
+            Part
+          </th>
+          <th scope="col" className="px-2 py-1.5 text-right font-medium">
+            Of supply
+          </th>
+          <th scope="col" className="py-1.5 text-right font-medium">
+            Tokens
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row) => (
+          <tr key={row.label} className="border-b border-line">
+            <th scope="row" className="py-2 text-left font-normal text-body">
+              <span className="flex items-center gap-2">
+                <Swatch color={row.color} />
+                {row.label}
+              </span>
+            </th>
+            <td className="px-2 py-2 text-right font-mono text-muted">{formatBps(row.bps)}</td>
+            <td className="py-2 text-right font-mono text-text">{formatTokens(row.tokens)}</td>
+          </tr>
+        ))}
+      </tbody>
+      <tfoot>
+        <tr className="border-b border-line">
+          <th scope="row" className="py-2 text-left font-medium text-text">
+            {total.label}
+          </th>
+          <td
+            className={`whitespace-nowrap px-2 py-2 text-right font-mono font-medium ${total.danger ? "text-danger" : "text-text"}`}
+          >
+            {total.bps}
+          </td>
+          <td className="py-2 text-right font-mono font-medium text-text">{total.tokens}</td>
+        </tr>
+      </tfoot>
+    </table>
+  );
+}
+
 export function SupplyMap({ sim }: { sim: Simulation }) {
   const s = sim.supply;
   const audiences = PROTOCOL.airdrop.audiences.value;
-  const description = `Total supply ${formatTokens(s.totalSupply)} tokens: ${formatBps(s.curveBps)} bonding curve, ${formatBps(s.liquidityBps)} graduated liquidity. Your opening buy is ${formatBps(s.openingBuyBps)} and your airdrop reserve is ${formatBps(s.airdropBps)} of supply, ${formatBps(s.combinedBps)} combined against a ${formatBps(s.capBps)} limit.`;
+  const dividedHeading = `How the ${formatTokens(s.totalSupply)} supply is divided`;
+  const description = `${dividedHeading}: ${formatBps(s.curveBps)} bonding curve and ${formatBps(s.liquidityBps)} graduated liquidity, ${formatBps(s.curveBps + s.liquidityBps)} in total. ${ALLOCATIONS_HEADING}: opening buy ${formatBps(s.openingBuyBps)} and airdrop reserve ${formatBps(s.airdropBps)}, ${formatBps(s.combinedBps)} combined against the ${formatBps(s.capBps)} limit. ${SHARES_NOTE}`;
 
-  const legend = [
+  const divided: Row[] = [
     { label: "Bonding curve", color: "var(--c-curve)", bps: s.curveBps, tokens: s.curveSupply },
     {
       label: "Graduated liquidity",
@@ -29,6 +99,8 @@ export function SupplyMap({ sim }: { sim: Simulation }) {
       bps: s.liquidityBps,
       tokens: s.liquiditySupply,
     },
+  ];
+  const allocations: Row[] = [
     {
       label: "Your opening buy",
       color: "var(--accent)",
@@ -82,36 +154,26 @@ export function SupplyMap({ sim }: { sim: Simulation }) {
         <span>100%</span>
       </div>
 
-      <table className="mt-3 w-full text-sm">
-        <caption className="sr-only">Supply breakdown</caption>
-        <thead>
-          <tr className="border-b border-line text-left font-mono text-[11px] uppercase tracking-wider text-muted">
-            <th scope="col" className="py-1.5 font-medium">
-              Part
-            </th>
-            <th scope="col" className="px-2 py-1.5 text-right font-medium">
-              Of supply
-            </th>
-            <th scope="col" className="py-1.5 text-right font-medium">
-              Tokens
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {legend.map((row) => (
-            <tr key={row.label} className="border-b border-line">
-              <th scope="row" className="py-2 text-left font-normal text-body">
-                <span className="flex items-center gap-2">
-                  <Swatch color={row.color} />
-                  {row.label}
-                </span>
-              </th>
-              <td className="px-2 py-2 text-right font-mono text-muted">{formatBps(row.bps)}</td>
-              <td className="py-2 text-right font-mono text-text">{formatTokens(row.tokens)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <SupplyTable
+        caption={dividedHeading}
+        rows={divided}
+        total={{
+          label: "Total",
+          bps: formatBps(s.curveBps + s.liquidityBps),
+          tokens: formatTokens(s.totalSupply),
+        }}
+      />
+      <SupplyTable
+        caption={ALLOCATIONS_HEADING}
+        rows={allocations}
+        total={{
+          label: `Combined, against the ${formatBps(s.capBps)} limit`,
+          bps: `${formatBps(s.combinedBps)} of ${formatBps(s.capBps)}`,
+          tokens: formatTokens(s.openingBuyTokens + s.airdropTokens),
+          danger: !s.withinCap,
+        }}
+      />
+      <p className="mt-2 text-[13px] leading-relaxed text-muted">{SHARES_NOTE}</p>
 
       <p className="mt-3 text-sm text-body" data-testid="cap-readout">
         Opening buy plus airdrop reserve:{" "}

@@ -38,6 +38,25 @@ describe("URL state", () => {
     expect(decodeConfig(record)).toEqual(custom);
   });
 
+  it("defaults to a 0% opening buy", () => {
+    expect(defaultConfig().openingBuyBps).toBe(0);
+    expect(validateConfig(defaultConfig())).toEqual({});
+  });
+
+  it("uses the 0% default when a link carries no opening-buy value", () => {
+    const config = decodeConfig(new URLSearchParams("v=1&tax=200"));
+    expect(config.openingBuyBps).toBe(0);
+    expect(decodeConfig(new URLSearchParams(encodeConfig(config)))).toEqual(config);
+  });
+
+  it("restores an explicit opening-buy value from an older link", () => {
+    const config = decodeConfig(new URLSearchParams("v=1&ob=500"));
+    expect(config.openingBuyBps).toBe(500);
+    expect(encodeConfig(config)).toContain("ob=500");
+    expect(decodeConfig(new URLSearchParams(encodeConfig(config)))).toEqual(config);
+    expect(decodeConfig(new URLSearchParams("v=1&ob=0")).openingBuyBps).toBe(0);
+  });
+
   it("returns defaults for an empty query", () => {
     expect(decodeConfig(new URLSearchParams(""))).toEqual(defaultConfig());
     expect(hasConfigParams(new URLSearchParams(""))).toBe(false);

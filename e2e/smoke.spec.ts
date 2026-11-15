@@ -70,6 +70,33 @@ test("the 50% cap is enforced with a specific message", async ({ page }) => {
   await expect(page.getByTestId("cap-readout")).toContainText("50% of the 50% limit");
 });
 
+test("a new simulation starts with no opening buy, and old links keep theirs", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByLabel("Opening buy, percent of supply")).toHaveValue("0");
+  await expect(page.getByTestId("no-opening-buy")).toHaveText("No opening buy set");
+  await expect(page.getByTestId("opening-cost")).toHaveCount(0);
+
+  await page.goto("/?v=1&ob=500");
+  await expect(page.getByLabel("Opening buy, percent of supply")).toHaveValue("5");
+  await expect(page.getByTestId("opening-cost")).toBeVisible();
+});
+
+test("the report link opens a pre-filled GitHub issue in a new tab", async ({ page }) => {
+  for (const path of ["/", "/about"]) {
+    await page.goto(path);
+    const links = page.getByRole("link", { name: /report a wrong number/i });
+    for (const link of await links.all()) {
+      await expect(link).toHaveAttribute(
+        "href",
+        /github\.com\/.+\/issues\/new\?title=Wrong%20number/,
+      );
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    }
+    expect(await links.count()).toBeGreaterThan(0);
+  }
+});
+
 test("sharing: summary text and PNG card both carry the unofficial label", async ({ page }) => {
   await page.goto("/?v=1&n=Moon+Cat&t=MCAT&tax=200");
   await page.getByRole("button", { name: "Copy summary" }).click();

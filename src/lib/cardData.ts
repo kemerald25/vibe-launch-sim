@@ -46,11 +46,13 @@ export function buildCardData(sim: Simulation): CardData {
       { label: "Base tax", value: formatBps(config.taxBps) },
       { label: "Opening buy", value: formatBps(supply.openingBuyBps) },
       { label: "Airdrop reserve", value: formatBps(supply.airdropBps) },
-      {
-        label: "Opening-buy cost",
-        value: `≈ ${formatAmount(curve.openingBuyCost)} ${pairSymbol}`,
-        estimate: true,
-      },
+      supply.openingBuyTokens > 0n
+        ? {
+            label: "Opening-buy cost",
+            value: `≈ ${formatAmount(curve.openingBuyCost)} ${pairSymbol}`,
+            estimate: true,
+          }
+        : { label: "Opening-buy cost", value: "None set" },
     ],
     segmentsTitle: "Where the tax goes",
     segments: [

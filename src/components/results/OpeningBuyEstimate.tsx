@@ -2,6 +2,7 @@ import { ASSUMPTIONS } from "@/config/assumptions";
 import { PROTOCOL } from "@/config/protocol";
 import type { Simulation } from "@/lib/simulate";
 import { formatAmount, formatBps, formatMultiple, formatTokens } from "@/lib/units";
+import { NO_OPENING_BUY } from "@/lib/summary";
 import { DataRow, EstimateBadge, EstimateNote, Panel } from "../ui";
 
 export function OpeningBuyEstimate({ sim }: { sim: Simulation }) {
@@ -40,7 +41,9 @@ export function OpeningBuyEstimate({ sim }: { sim: Simulation }) {
           />
         </dl>
       ) : (
-        <p className="text-sm text-body">No opening buy is set, so there is nothing to estimate.</p>
+        <p className="text-sm text-body" data-testid="no-opening-buy">
+          {NO_OPENING_BUY}
+        </p>
       )}
 
       <h3 className="mt-5 text-[13px] uppercase tracking-wider text-muted">Launch costs</h3>
@@ -67,7 +70,13 @@ export function OpeningBuyEstimate({ sim }: { sim: Simulation }) {
         />
         <DataRow
           label="Opening purchase"
-          value={hasBuy ? `≈ ${formatAmount(curve.openingBuyCostEth)} ${eth}` : `0 ${eth}`}
+          value={
+            hasBuy ? (
+              `≈ ${formatAmount(curve.openingBuyCostEth)} ${eth}`
+            ) : (
+              <span className="text-muted">{NO_OPENING_BUY}</span>
+            )
+          }
         />
         <DataRow label="Network gas" value={<span className="text-muted">Not estimated</span>} />
         <DataRow

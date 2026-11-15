@@ -15,7 +15,31 @@ export const SITE = {
   authorXUrl: "https://x.com/iamdevroale",
 } as const;
 
-export const ISSUES_URL = `${SITE.githubUrl}/issues/new`;
+/** Where new GitHub issues are opened. */
+export const issuesUrl = `${SITE.githubUrl}/issues/new`;
+
+const WRONG_NUMBER_TITLE = "Wrong number: ";
+const WRONG_NUMBER_BODY = [
+  "**Which figure is wrong?**",
+  "",
+  "",
+  `**What ${SITE.name} shows:**`,
+  "",
+  "",
+  "**What the vibe/vibe app or docs show:**",
+  "",
+  "",
+  "**Link or screenshot:**",
+  "",
+].join("\n");
+
+/** A new-issue link with the title and body pre-filled through GitHub's query parameters. */
+export function buildIssueUrl(title: string, body: string): string {
+  return `${issuesUrl}?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+}
+
+/** Pre-filled "wrong number" report. Used by every "Report a wrong number" link. */
+export const REPORT_WRONG_NUMBER_URL = buildIssueUrl(WRONG_NUMBER_TITLE, WRONG_NUMBER_BODY);
 
 /**
  * Fixed colours for surfaces that cannot read CSS variables (the PNG card and
